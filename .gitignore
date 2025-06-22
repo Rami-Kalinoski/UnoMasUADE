@@ -1,0 +1,39 @@
+HELP.md
+
+# Maven
+target/
+.mvn/
+
+# IDEs
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+.idea/
+*.iws
+*.iml
+*.ipr
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+/.vscode/
+
+# Archivos sensibles
+src/main/resources/application.properties
+src/main/resources/firebase-adminsdk.json
+**/firebase*.json
+**/*.p12
+.env
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
