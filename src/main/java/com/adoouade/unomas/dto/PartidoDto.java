@@ -23,11 +23,18 @@ public class PartidoDto {
     private String ubicacion;
     private LocalDate fecha;
     private LocalTime horario;
-    private IEstadoPartido estado;
-    private List<Participacion> participaciones;
-    private List<Reseña> reseñas;
-    private Emparejador emparejador;
-    private Observer observer; // notificador
+    private String estado;
     private int cantidadJugadores;
     private int duracionMinutos;
+
+    public PartidoDto(Long organizadorId, Long deporteId, String ubicacion, LocalDate fecha, LocalTime horario, String estado, int cantidadJugadores, int duracionMinutos) {
+        this.organizadorId = organizadorId;
+        this.deporteId = deporteId;
+        this.ubicacion = ubicacion;
+        this.fecha = fecha;
+        this.horario = horario;
+        this.estado = estado;
+        this.cantidadJugadores = cantidadJugadores;
+        this.duracionMinutos = duracionMinutos;
+    }
 }

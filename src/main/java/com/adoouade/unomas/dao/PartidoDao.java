@@ -1,9 +1,9 @@
 package com.adoouade.unomas.dao;
 
+import com.adoouade.unomas.classes.*;
 import com.adoouade.unomas.dto.PartidoDto;
-import com.adoouade.unomas.model.Partido;
-import com.adoouade.unomas.model.Usuario;
-import com.adoouade.unomas.model.Deporte;
+import com.adoouade.unomas.interfaces.IEstadoPartido;
+import com.adoouade.unomas.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -17,12 +17,61 @@ import java.sql.Date;
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Repository
 public class PartidoDao {
     // attributes
     @Autowired
     private DataSource dataSource;
+
+    // pass
+    public Partido toModel(Long id) {
+        return obtenerPartido(id);
+    }
+    public Partido toModel(PartidoDto dto) {
+        Partido partido = new Partido();
+        partido.setId(dto.getId());
+        partido.setOrganizador(new UsuarioDao().obtenerUsuario(dto.getOrganizadorId()));
+        partido.setDeporte(new DeporteDao().obtenerDeporte(dto.getDeporteId()));
+        partido.setUbicacion(dto.getUbicacion());
+        partido.setFecha(dto.getFecha());
+        partido.setHorario(dto.getHorario());
+
+        String estado = dto.getEstado();
+        IEstadoPartido estadoPartido = null;
+        if (estado=="NECESITA_JUGADORES") {
+            estadoPartido = new NecesitaJugadores();
+        } else if (estado=="PARTIDO_ARMADO") {
+            estadoPartido = new PartidoArmado();
+        } else if (estado=="CONFIRMADO") {
+            estadoPartido = new Confirmado();
+        } else if (estado=="EN_JUEGO") {
+            estadoPartido = new EnJuego();
+        } else if (estado=="FINALIZADO") {
+            estadoPartido = new Finalizado();
+        } else {
+            estadoPartido = new Cancelado();
+        }
+        partido.setEstado(estadoPartido);
+        List<Participacion> participaciones = new ParticipacionDao().obtenerParticipaciones().stream()
+                .filter(p -> p.getPartido() != null && p.getPartido().getId().equals(dto.getId()))
+                .collect(Collectors.toList());
+        partido.setParticipaciones(participaciones);
+        List<Reseña> reseñas = new ReseñaDao().obtenerReseñas().stream()
+                .filter(p -> p.getPartido() != null && p.getPartido().getId().equals(dto.getId()))
+                .collect(Collectors.toList());
+        partido.setReseñas(reseñas);
+        partido.setEmparejador(null);
+        partido.setObserver(null);
+        partido.setCantidadJugadores(dto.getCantidadJugadores());
+        partido.setDuracionMinutos(dto.getDuracionMinutos());
+        return partido;
+    }
+
+    public PartidoDto toDto(Partido partido) {
+        return new PartidoDto(partido.getId(), partido.getOrganizador().getId(), partido.getDeporte().getId(), partido.getUbicacion(), partido.getFecha(), partido.getHorario(), partido.getEstado().toString(), partido.getCantidadJugadores(), partido.getDuracionMinutos());
+    }
 
     //methods
     // Partido ---------------------------------------------------------------------------------------------------------

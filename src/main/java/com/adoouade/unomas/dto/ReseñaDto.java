@@ -13,4 +13,10 @@ public class ReseñaDto {
     private Long partidoId;
     private String comentario;
     private int calificacion;
+
+    public ReseñaDto(Long partidoId, String comentario, int calificacion) {
+        this.partidoId = partidoId;
+        this.comentario = comentario;
+        this.calificacion = calificacion;
+    }
 }

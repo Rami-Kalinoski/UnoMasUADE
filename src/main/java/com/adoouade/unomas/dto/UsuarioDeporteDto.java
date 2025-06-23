@@ -26,4 +26,14 @@ public class UsuarioDeporteDto {
     private int partidosPerdidos = 0;
     @Builder.Default
     private int partidosEmpatados = 0;
+
+    public UsuarioDeporteDto(Long usuarioId, Long deporteId, Nivel nivel, boolean favorito) {
+        this.usuarioId = usuarioId;
+        this.deporteId = deporteId;
+        this.nivel = nivel;
+        this.favorito = favorito;
+        this.partidosGanados = 0;
+        this.partidosPerdidos = 0;
+        this.partidosEmpatados = 0;
+    }
 }

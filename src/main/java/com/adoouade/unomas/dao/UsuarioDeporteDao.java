@@ -20,6 +20,24 @@ public class UsuarioDeporteDao {
     @Autowired
     private DataSource dataSource;
 
+    // pass
+    public UsuarioDeporte toModel(UsuarioDeporteDto dto) {
+        UsuarioDeporte ud = new UsuarioDeporte();
+        ud.setId(dto.getId());
+        ud.setUsuario(new UsuarioDao().obtenerUsuario(dto.getUsuarioId()));
+        ud.setDeporte(new DeporteDao().obtenerDeporte(dto.getDeporteId()));
+        ud.setNivel(dto.getNivel());
+        ud.setFavorito(dto.isFavorito());
+        ud.setPartidosGanados(dto.getPartidosGanados());
+        ud.setPartidosPerdidos(dto.getPartidosPerdidos());
+        ud.setPartidosEmpatados(dto.getPartidosEmpatados());
+        return ud;
+    }
+
+    public UsuarioDeporteDto toDto(UsuarioDeporte usuario) {
+        return new UsuarioDeporteDto(usuario.getId(), usuario.getUsuario().getId(), usuario.getDeporte().getId(), usuario.getNivel(), usuario.isFavorito(), usuario.getPartidosGanados(), usuario.getPartidosPerdidos(), usuario.getPartidosEmpatados());
+    }
+
     // methods
     public UsuarioDeporte crearUsuarioDeporte(UsuarioDeporteDto dto) {
         String sql = "INSERT INTO usuario_deporte (usuario_id, deporte_id, nivel, favorito, partidos_ganados, partidos_perdidos, partidos_empatados) " +

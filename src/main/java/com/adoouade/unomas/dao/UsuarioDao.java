@@ -2,6 +2,7 @@ package com.adoouade.unomas.dao;
 
 import com.adoouade.unomas.dto.UsuarioDto;
 import com.adoouade.unomas.model.Usuario;
+import com.adoouade.unomas.model.UsuarioDeporte;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -13,6 +14,7 @@ import java.sql.Statement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Repository
@@ -20,6 +22,36 @@ public class UsuarioDao {
     // attributes
     @Autowired
     private DataSource dataSource;
+
+    // pass
+    public Usuario toModel(Long id) {
+        Usuario usuario = obtenerUsuario(id);
+        List<UsuarioDeporte> usuarioDeportes = new UsuarioDeporteDao().obtenerUsuarioDeportes().stream()
+                .filter(ud -> ud.getUsuario() != null && ud.getUsuario().getId().equals(id))
+                .collect(Collectors.toList());;
+        usuario.setUsuarioDeportes(usuarioDeportes);
+        usuario.setUsuarioDao(new UsuarioDao());
+        usuario.setUsuarioDeporteDao(new UsuarioDeporteDao());
+        usuario.setParticipacionDao(new ParticipacionDao());
+        return usuario;
+    }
+
+    public Usuario toModel(UsuarioDto dto) {
+        Usuario usuario = new Usuario();
+        usuario.setId(dto.getId());
+        usuario.setUsername(dto.getUsername());
+        usuario.setContraseña(dto.getContraseña());
+        usuario.setUbicacion(dto.getUbicacion());
+        List<UsuarioDeporte> usuarioDeportes = new UsuarioDeporteDao().obtenerUsuarioDeportes().stream()
+                .filter(ud -> ud.getUsuario() != null && ud.getUsuario().getId().equals(dto.getId()))
+                .collect(Collectors.toList());
+        usuario.setUsuarioDeportes(usuarioDeportes);
+        return usuario;
+    }
+
+    public UsuarioDto toDto(Usuario usuario) {
+        return new UsuarioDto(usuario.getId(), usuario.getUsername(), usuario.getEmail(), usuario.getContraseña(), usuario.getUbicacion());
+    }
 
     // methods
     public Usuario crearUsuario(UsuarioDto dto) {

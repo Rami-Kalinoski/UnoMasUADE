@@ -21,6 +21,15 @@ public class ReseñaDao {
     @Autowired
     private DataSource dataSource;
 
+    // pass
+    public Reseña toModel(ReseñaDto dto) {
+        return new Reseña(dto.getId(), new PartidoDao().obtenerPartido(dto.getPartidoId()), dto.getComentario(), dto.getCalificacion());
+    }
+
+    public ReseñaDto toDto(Reseña reseña) {
+        return new ReseñaDto(reseña.getId(), reseña.getPartido().getId(), reseña.getComentario(), reseña.getCalificacion());
+    }
+
     // methods
     public Reseña crearReseña(ReseñaDto dto) {
         String sql = "INSERT INTO reseña (partido_id, comentario, calificacion) VALUES (?, ?, ?)";

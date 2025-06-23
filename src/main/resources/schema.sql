@@ -1,4 +1,4 @@
-CREATE TABLE usuario (
+CREATE TABLE IF NOT EXISTS usuario (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(100),
     email VARCHAR(100),
@@ -6,13 +6,13 @@ CREATE TABLE usuario (
     ubicacion VARCHAR(100)
 );
 
-CREATE TABLE deporte (
+CREATE TABLE IF NOT EXISTS deporte (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(100) UNIQUE,
     cantidad_jugadores INT
 );
 
-CREATE TABLE usuario_deporte (
+CREATE TABLE IF NOT EXISTS usuario_deporte (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     usuario_id BIGINT,
     deporte_id BIGINT,
@@ -25,7 +25,7 @@ CREATE TABLE usuario_deporte (
     FOREIGN KEY (deporte_id) REFERENCES deporte(id)
 );
 
-CREATE TABLE partido (
+CREATE TABLE IF NOT EXISTS partido (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     organizador_id BIGINT,
     deporte_id BIGINT,
@@ -38,7 +38,7 @@ CREATE TABLE partido (
     FOREIGN KEY (deporte_id) REFERENCES deporte(id)
 );
 
-CREATE TABLE participacion (
+CREATE TABLE IF NOT EXISTS participacion (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     usuario_id BIGINT,
     partido_id BIGINT,
@@ -48,7 +48,7 @@ CREATE TABLE participacion (
     FOREIGN KEY (partido_id) REFERENCES partido(id)
 );
 
-CREATE TABLE reseña (
+CREATE TABLE IF NOT EXISTS reseña (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     partido_id BIGINT,
     comentario TEXT,

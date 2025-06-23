@@ -13,4 +13,13 @@ public class UsuarioDto {
     private String email;
     private String contraseña;
     private String ubicacion;
+
+    public UsuarioDto(String username, String email, String contraseña, String ubicacion) {
+        this.username = username;
+        this.email = email;
+        this.contraseña = contraseña;
+        this.ubicacion = ubicacion;
+    }
+
+
 }

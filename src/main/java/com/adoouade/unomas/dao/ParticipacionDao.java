@@ -21,6 +21,21 @@ public class ParticipacionDao {
     @Autowired
     private DataSource dataSource;
 
+    // pass
+    public Participacion toModel(ParticipacionDto dto) {
+        Participacion participacion = new Participacion();
+        participacion.setId(dto.getId());
+        participacion.setUsuario(new UsuarioDao().toModel(dto.getUsuarioId()));
+        participacion.setPartido(new PartidoDao().toModel(dto.getPartidoId()));
+        participacion.setEstado(dto.getEstado());
+        participacion.setResultado(dto.getResultado());
+        return participacion;
+    }
+
+    public ParticipacionDto toDto(Participacion participacion) {
+        return new ParticipacionDto(participacion.getId(), participacion.getUsuario().getId(), participacion.getPartido().getId(), participacion.getEstado(), participacion.getResultado());
+    }
+
     // methods
     public Participacion crearParticipacion(ParticipacionDto dto) {
         String sql = "INSERT INTO participacion (usuario_id, partido_id, estado, resultado) VALUES (?, ?, ?, ?)";
