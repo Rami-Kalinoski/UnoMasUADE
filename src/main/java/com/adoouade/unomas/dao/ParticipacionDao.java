@@ -27,13 +27,13 @@ public class ParticipacionDao {
         participacion.setId(dto.getId());
         participacion.setUsuario(new UsuarioDao().toModel(dto.getUsuarioId()));
         participacion.setPartido(new PartidoDao().toModel(dto.getPartidoId()));
-        participacion.setEstado(dto.getEstado());
-        participacion.setResultado(dto.getResultado());
+        participacion.setEstado(EstadoParticipacion.valueOf(dto.getEstado()));
+        participacion.setResultado(Resultado.valueOf(dto.getResultado()));
         return participacion;
     }
 
     public ParticipacionDto toDto(Participacion participacion) {
-        return new ParticipacionDto(participacion.getId(), participacion.getUsuario().getId(), participacion.getPartido().getId(), participacion.getEstado(), participacion.getResultado());
+        return new ParticipacionDto(participacion.getId(), participacion.getUsuario().getId(), participacion.getPartido().getId(), participacion.getEstado().toString(), participacion.getResultado().toString());
     }
 
     // methods
@@ -58,8 +58,8 @@ public class ParticipacionDao {
                             rs.getLong(1),
                             usuario,
                             partido,
-                            dto.getEstado(),
-                            dto.getResultado()
+                            EstadoParticipacion.valueOf(dto.getEstado()),
+                            Resultado.valueOf(dto.getResultado())
                     );
                 }
             }

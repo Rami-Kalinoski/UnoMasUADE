@@ -2,7 +2,9 @@ package com.adoouade.unomas.classes;
 
 import com.adoouade.unomas.interfaces.IEstrategiaEmparejamiento;
 import com.adoouade.unomas.model.Partido;
+import lombok.Getter;
 
+@Getter
 public class Emparejador {
     // attributes
     private IEstrategiaEmparejamiento estrategia;

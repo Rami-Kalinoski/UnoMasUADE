@@ -30,7 +30,7 @@ public class UsuarioDeporteDto {
     public UsuarioDeporteDto(Long usuarioId, Long deporteId, Nivel nivel, boolean favorito) {
         this.usuarioId = usuarioId;
         this.deporteId = deporteId;
-        this.nivel = nivel;
+        this.nivel = nivel!=null ? nivel : Nivel.PRINCIPIANTE;
         this.favorito = favorito;
         this.partidosGanados = 0;
         this.partidosPerdidos = 0;

@@ -25,7 +25,6 @@ build/
 /.vscode/
 
 # Archivos sensibles
-src/main/resources/application.properties
 src/main/resources/firebase-adminsdk.json
 **/firebase*.json
 **/*.p12

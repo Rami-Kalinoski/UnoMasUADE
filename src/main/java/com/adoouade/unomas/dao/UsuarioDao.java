@@ -22,17 +22,23 @@ public class UsuarioDao {
     // attributes
     @Autowired
     private DataSource dataSource;
+    @Autowired
+    private UsuarioDeporteDao usuarioDeporteDao;
+    @Autowired
+    private ParticipacionDao participacionDao;
+    @Autowired
+    private UsuarioDao self;
 
     // pass
     public Usuario toModel(Long id) {
         Usuario usuario = obtenerUsuario(id);
-        List<UsuarioDeporte> usuarioDeportes = new UsuarioDeporteDao().obtenerUsuarioDeportes().stream()
+        List<UsuarioDeporte> usuarioDeportes = usuarioDeporteDao.obtenerUsuarioDeportes().stream()
                 .filter(ud -> ud.getUsuario() != null && ud.getUsuario().getId().equals(id))
                 .collect(Collectors.toList());;
         usuario.setUsuarioDeportes(usuarioDeportes);
-        usuario.setUsuarioDao(new UsuarioDao());
-        usuario.setUsuarioDeporteDao(new UsuarioDeporteDao());
-        usuario.setParticipacionDao(new ParticipacionDao());
+        //usuario.setUsuarioDao(self);
+        //usuario.setUsuarioDeporteDao(usuarioDeporteDao);
+        usuario.setParticipacionDao(participacionDao);
         return usuario;
     }
 
@@ -42,7 +48,7 @@ public class UsuarioDao {
         usuario.setUsername(dto.getUsername());
         usuario.setContraseña(dto.getContraseña());
         usuario.setUbicacion(dto.getUbicacion());
-        List<UsuarioDeporte> usuarioDeportes = new UsuarioDeporteDao().obtenerUsuarioDeportes().stream()
+        List<UsuarioDeporte> usuarioDeportes = usuarioDeporteDao.obtenerUsuarioDeportes().stream()
                 .filter(ud -> ud.getUsuario() != null && ud.getUsuario().getId().equals(dto.getId()))
                 .collect(Collectors.toList());
         usuario.setUsuarioDeportes(usuarioDeportes);
