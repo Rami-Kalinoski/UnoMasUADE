@@ -13,12 +13,14 @@ public class UsuarioDto {
     private String email;
     private String contraseña;
     private String ubicacion;
+    private String notificaciones;
 
-    public UsuarioDto(String username, String email, String contraseña, String ubicacion) {
+    public UsuarioDto(String username, String email, String contraseña, String ubicacion, String notificaciones) {
         this.username = username;
         this.email = email;
         this.contraseña = contraseña;
         this.ubicacion = ubicacion;
+        this.notificaciones = notificaciones;
     }
 
 

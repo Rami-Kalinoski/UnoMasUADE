@@ -13,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.ArrayList;
 import java.util.List;
 
-@Data @ToString @EqualsAndHashCode
+@Data @EqualsAndHashCode
 @AllArgsConstructor @NoArgsConstructor
 public class PorNivel implements IEstrategiaEmparejamiento {
     // attributes
@@ -24,34 +24,36 @@ public class PorNivel implements IEstrategiaEmparejamiento {
 
     // methods
     public void Emparejar(Partido partido) {
-//        List<Usuario> usuarios = controller.ObtenerUsuarios();
-//        List<Usuario> notificados = new ArrayList<>();
-//        Deporte deporte = partido.getDeporte();
-//        usuarios.forEach(usuario -> {
-//            UsuarioDeporte usuarioDeporte = controller.ObtenerUsuarioDeporte(usuario.getUsername(), deporte.getNombre());
-//            Nivel nivel = usuarioDeporte.getNivel();
-//            if (usuarioDeporte.isFavorito() && (nivelMinimo == null || nivel.compareTo(nivelMinimo) >= 0) && (nivelMaximo == null || nivel.compareTo(nivelMaximo) <= 0)) {
-//                // notificar y crear invitación
-//                notificados.add(usuario);
-//                controller.CrearParticipacion(new ParticipacionDto(usuario, partido, EstadoParticipacion.PENDIENTE, Resultado.INDEFINIDO));
-//            }
-//        });
-//        StringBuilder mensaje = new StringBuilder("¡Se ha creado un nuevo partido de " + deporte.getNombre());
-//        if (nivelMinimo != null && nivelMaximo != null) {
-//            mensaje.append(" con nivel mínimo de ").append(nivelMinimo)
-//                    .append(" y nivel máximo de ").append(nivelMaximo);
-//        } else if (nivelMinimo != null) {
-//            mensaje.append(" con nivel mínimo de ").append(nivelMinimo);
-//        } else if (nivelMaximo != null) {
-//            mensaje.append(" con nivel máximo de ").append(nivelMaximo);
-//        } else {
-//            mensaje.append(" con todos los niveles");
-//        }
-//        mensaje.append("!");
-//        partido.getObserver().SerNotificado(notificados, new Notificacion("Partido de tu nivel creado", mensaje.toString()));
-//        if (partido.getParticipaciones().size()>=partido.getCantidadJugadores()) {
-//            partido.CambiarEstado();
-//        }
+        List<Usuario> usuarios = controller.ObtenerUsuarios();
+        List<Usuario> notificados = new ArrayList<>();
+        Deporte deporte = partido.getDeporte();
+        usuarios.forEach(usuario -> {
+            UsuarioDeporte usuarioDeporte = controller.ObtenerUsuarioDeporte(usuario.getId(), deporte.getId());
+            if (usuarioDeporte!=null) {
+                Nivel nivel = usuarioDeporte.getNivel();
+                if (usuarioDeporte.isFavorito() && (nivelMinimo == null || nivel.compareTo(nivelMinimo) >= 0) && (nivelMaximo == null || nivel.compareTo(nivelMaximo) <= 0)) {
+                    // notificar y crear invitación
+                    notificados.add(usuario);
+                    controller.CrearParticipacion(new ParticipacionDto(usuario.getId(), partido.getId(), EstadoParticipacion.PENDIENTE, Resultado.INDEFINIDO));
+                }
+            }
+        });
+        StringBuilder mensaje = new StringBuilder("¡Se ha creado un nuevo partido de " + deporte.getNombre());
+        if (nivelMinimo != null && nivelMaximo != null) {
+            mensaje.append(" con nivel mínimo de ").append(nivelMinimo)
+                    .append(" y nivel máximo de ").append(nivelMaximo);
+        } else if (nivelMinimo != null) {
+            mensaje.append(" con nivel mínimo de ").append(nivelMinimo);
+        } else if (nivelMaximo != null) {
+            mensaje.append(" con nivel máximo de ").append(nivelMaximo);
+        } else {
+            mensaje.append(" con todos los niveles");
+        }
+        mensaje.append("!");
+        partido.getObserver().SerNotificado(notificados, new Notificacion("Partido de tu nivel creado", mensaje.toString()));
+        if (partido.getEstado().getClass().equals(NecesitaJugadores.class) && partido.getParticipaciones().size()>=partido.getCantidadJugadores()) {
+            partido.CambiarEstado();
+        }
     }
     @Override
     public String toString() {

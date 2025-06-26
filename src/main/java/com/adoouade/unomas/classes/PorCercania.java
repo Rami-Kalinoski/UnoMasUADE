@@ -15,7 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.ArrayList;
 import java.util.List;
 
-@Data @ToString @EqualsAndHashCode
+@Data @EqualsAndHashCode
 @AllArgsConstructor @NoArgsConstructor
 public class PorCercania implements IEstrategiaEmparejamiento {
     // attributes
@@ -25,21 +25,21 @@ public class PorCercania implements IEstrategiaEmparejamiento {
 
     // methods
     public void Emparejar(Partido partido) {
-//        List<Usuario> usuarios = controller.ObtenerUsuarios();
-//        List<Usuario> notificados = new ArrayList<>();
-//        Deporte deporte = partido.getDeporte();
-//        usuarios.forEach(usuario -> {
-//            UsuarioDeporte usuarioDeporte = controller.ObtenerUsuarioDeporte(usuario.getUsername(), deporte.getNombre());
-//            if (usuarioDeporte.isFavorito() && usuario.getUbicacion().equals(partido.getUbicacion())) {
-//                // notificar y crear invitación
-//                notificados.add(usuario);
-//                controller.CrearParticipacion(new ParticipacionDto(usuario, partido, EstadoParticipacion.PENDIENTE, Resultado.INDEFINIDO));
-//            }
-//        });
-//        partido.getObserver().SerNotificado(notificados, new Notificacion("Partido cercano creado", "¡Se ha creado un nuevo partido de " + deporte.getNombre() + " cerca de tu zona!"));
-//        if (partido.getParticipaciones().size()>=partido.getCantidadJugadores()) {
-//            partido.CambiarEstado();
-//        }
+        List<Usuario> usuarios = controller.ObtenerUsuarios();
+        List<Usuario> notificados = new ArrayList<>();
+        Deporte deporte = partido.getDeporte();
+        usuarios.forEach(usuario -> {
+            UsuarioDeporte usuarioDeporte = controller.ObtenerUsuarioDeporte(usuario.getId(), deporte.getId());
+            if (usuarioDeporte!=null && usuarioDeporte.isFavorito() && usuario.getUbicacion().equals(partido.getUbicacion())) {
+                // notificar y crear invitación
+                notificados.add(usuario);
+                controller.CrearParticipacion(new ParticipacionDto(usuario.getId(), partido.getId(), EstadoParticipacion.PENDIENTE, Resultado.INDEFINIDO));
+            }
+        });
+        partido.getObserver().SerNotificado(notificados, new Notificacion("Partido cercano creado", "¡Se ha creado un nuevo partido de " + deporte.getNombre() + " cerca de tu zona!"));
+        if (partido.getEstado().getClass().equals(NecesitaJugadores.class) && partido.getParticipaciones().size()>=partido.getCantidadJugadores()) {
+            partido.CambiarEstado();
+        }
     }
     @Override
     public String toString() {

@@ -30,7 +30,7 @@ public class PartidoDto {
         this.ubicacion = ubicacion;
         this.fecha = fecha;
         this.horario = horario;
-        this.estado = estado.getClass().getName();
+        this.estado = estado.getClass().toString();
         this.emparejador = emparejador;
         this.cantidadJugadores = cantidadJugadores;
         this.duracionMinutos = duracionMinutos;

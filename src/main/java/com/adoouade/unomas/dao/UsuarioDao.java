@@ -1,6 +1,7 @@
 package com.adoouade.unomas.dao;
 
 import com.adoouade.unomas.dto.UsuarioDto;
+import com.adoouade.unomas.enums.Notificaciones;
 import com.adoouade.unomas.model.Usuario;
 import com.adoouade.unomas.model.UsuarioDeporte;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,6 +49,7 @@ public class UsuarioDao {
         usuario.setUsername(dto.getUsername());
         usuario.setContraseña(dto.getContraseña());
         usuario.setUbicacion(dto.getUbicacion());
+        usuario.setNotificaciones(Notificaciones.valueOf(dto.getNotificaciones()));
         List<UsuarioDeporte> usuarioDeportes = usuarioDeporteDao.obtenerUsuarioDeportes().stream()
                 .filter(ud -> ud.getUsuario() != null && ud.getUsuario().getId().equals(dto.getId()))
                 .collect(Collectors.toList());
@@ -56,12 +58,12 @@ public class UsuarioDao {
     }
 
     public UsuarioDto toDto(Usuario usuario) {
-        return new UsuarioDto(usuario.getId(), usuario.getUsername(), usuario.getEmail(), usuario.getContraseña(), usuario.getUbicacion());
+        return new UsuarioDto(usuario.getId(), usuario.getUsername(), usuario.getEmail(), usuario.getContraseña(), usuario.getUbicacion(), usuario.getNotificaciones().toString());
     }
 
     // methods
     public Usuario crearUsuario(UsuarioDto dto) {
-        String sql = "INSERT INTO usuario (username, email, contraseña, ubicacion) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO usuario (username, email, contraseña, ubicacion, notificaciones) VALUES (?, ?, ?, ?, ?)";
 
         try (Connection conn = dataSource.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -70,6 +72,7 @@ public class UsuarioDao {
             stmt.setString(2, dto.getEmail());
             stmt.setString(3, dto.getContraseña());
             stmt.setString(4, dto.getUbicacion());
+            stmt.setString(5, dto.getNotificaciones());
 
             int filas = stmt.executeUpdate();
             if (filas > 0) {
@@ -82,6 +85,7 @@ public class UsuarioDao {
                             dto.getContraseña(),
                             dto.getUbicacion(),
                             null,
+                            Notificaciones.valueOf(dto.getNotificaciones()),
                             null,
                             null,
                             null
@@ -112,6 +116,7 @@ public class UsuarioDao {
                         rs.getString("contraseña"),
                         rs.getString("ubicacion"),
                         null,
+                        Notificaciones.valueOf(rs.getString("notificaciones")),
                         null,
                         null,
                         null
@@ -140,6 +145,7 @@ public class UsuarioDao {
                         rs.getString("contraseña"),
                         rs.getString("ubicacion"),
                         null,
+                        Notificaciones.valueOf(rs.getString("notificaciones")),
                         null,
                         null,
                         null
@@ -171,7 +177,7 @@ public class UsuarioDao {
         }
     }
     public boolean modificarUsuario(UsuarioDto dto) {
-        String sql = "UPDATE usuario SET username = ?, email = ?, contraseña = ?, ubicacion = ? WHERE id = ?";
+        String sql = "UPDATE usuario SET username = ?, email = ?, contraseña = ?, ubicacion = ?, notificaciones = ? WHERE id = ?";
 
         try (Connection conn = dataSource.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -180,7 +186,8 @@ public class UsuarioDao {
             stmt.setString(2, dto.getEmail());
             stmt.setString(3, dto.getContraseña());
             stmt.setString(4, dto.getUbicacion());
-            stmt.setLong(5, dto.getId());
+            stmt.setString(5, dto.getNotificaciones());
+            stmt.setLong(6, dto.getId());
 
             return stmt.executeUpdate() > 0;
 

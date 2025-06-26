@@ -15,7 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.ArrayList;
 import java.util.List;
 
-@Data @ToString @EqualsAndHashCode
+@Data @EqualsAndHashCode
 @AllArgsConstructor @NoArgsConstructor
 public class PorHistorial implements IEstrategiaEmparejamiento {
     // attributes
@@ -28,43 +28,45 @@ public class PorHistorial implements IEstrategiaEmparejamiento {
 
     // methods
     public void Emparejar(Partido partido) {
-//        List<Usuario> usuarios = controller.ObtenerUsuarios();
-//        List<Usuario> notificados = new ArrayList<>();
-//        Deporte deporte = partido.getDeporte();
-//        usuarios.forEach(usuario -> {
-//            UsuarioDeporte usuarioDeporte = controller.ObtenerUsuarioDeporte(usuario.getUsername(), deporte.getNombre());
-//            int ganados = usuarioDeporte.getPartidosGanados();
-//            int perdidos = usuarioDeporte.getPartidosPerdidos();
-//            boolean cumpleGanados = (minimosGanados == null || ganados >= minimosGanados) && (maximosGanados == null || ganados <= maximosGanados);
-//            boolean cumplePerdidos = (minimosPerdidos == null || perdidos >= minimosPerdidos) && (maximosPerdidos == null || perdidos <= maximosPerdidos);
-//            if (usuarioDeporte.isFavorito() && cumpleGanados && cumplePerdidos) {
-//                notificados.add(usuario);
-//                controller.CrearParticipacion(new ParticipacionDto(usuario, partido, EstadoParticipacion.PENDIENTE, Resultado.INDEFINIDO));
-//            }
-//        });
-//        StringBuilder mensaje = new StringBuilder("¡Se ha creado un nuevo partido de " + deporte.getNombre());
-//        boolean hayFiltroGanados = minimosGanados != null || maximosGanados != null;
-//        boolean hayFiltroPerdidos = minimosPerdidos != null || maximosPerdidos != null;
-//
-//        if (hayFiltroGanados && hayFiltroPerdidos) {
-//            mensaje.append(" con historial de ")
-//                    .append(describirFiltro("ganados", minimosGanados, maximosGanados))
-//                    .append(" y ")
-//                    .append(describirFiltro("perdidos", minimosPerdidos, maximosPerdidos));
-//        } else if (hayFiltroGanados) {
-//            mensaje.append(" con historial de ")
-//                    .append(describirFiltro("ganados", minimosGanados, maximosGanados));
-//        } else if (hayFiltroPerdidos) {
-//            mensaje.append(" con historial de ")
-//                    .append(describirFiltro("perdidos", minimosPerdidos, maximosPerdidos));
-//        } else {
-//            mensaje.append(" para todo historial");
-//        }
-//        mensaje.append("!");
-//        partido.getObserver().SerNotificado(notificados, new Notificacion("Partido relacionado a tu historial creado", mensaje.toString()));
-//        if (partido.getParticipaciones().size()>=partido.getCantidadJugadores()) {
-//            partido.CambiarEstado();
-//        }
+        List<Usuario> usuarios = controller.ObtenerUsuarios();
+        List<Usuario> notificados = new ArrayList<>();
+        Deporte deporte = partido.getDeporte();
+        usuarios.forEach(usuario -> {
+            UsuarioDeporte usuarioDeporte = controller.ObtenerUsuarioDeporte(usuario.getId(), deporte.getId());
+            if (usuarioDeporte!=null) {
+                int ganados = usuarioDeporte.getPartidosGanados();
+                int perdidos = usuarioDeporte.getPartidosPerdidos();
+                boolean cumpleGanados = (minimosGanados == null || ganados >= minimosGanados) && (maximosGanados == null || ganados <= maximosGanados);
+                boolean cumplePerdidos = (minimosPerdidos == null || perdidos >= minimosPerdidos) && (maximosPerdidos == null || perdidos <= maximosPerdidos);
+                if (usuarioDeporte.isFavorito() && cumpleGanados && cumplePerdidos) {
+                    notificados.add(usuario);
+                    controller.CrearParticipacion(new ParticipacionDto(usuario.getId(), partido.getId(), EstadoParticipacion.PENDIENTE, Resultado.INDEFINIDO));
+                }
+            }
+        });
+        StringBuilder mensaje = new StringBuilder("¡Se ha creado un nuevo partido de " + deporte.getNombre());
+        boolean hayFiltroGanados = minimosGanados != null || maximosGanados != null;
+        boolean hayFiltroPerdidos = minimosPerdidos != null || maximosPerdidos != null;
+
+        if (hayFiltroGanados && hayFiltroPerdidos) {
+            mensaje.append(" con historial de ")
+                    .append(describirFiltro("ganados", minimosGanados, maximosGanados))
+                    .append(" y ")
+                    .append(describirFiltro("perdidos", minimosPerdidos, maximosPerdidos));
+        } else if (hayFiltroGanados) {
+            mensaje.append(" con historial de ")
+                    .append(describirFiltro("ganados", minimosGanados, maximosGanados));
+        } else if (hayFiltroPerdidos) {
+            mensaje.append(" con historial de ")
+                    .append(describirFiltro("perdidos", minimosPerdidos, maximosPerdidos));
+        } else {
+            mensaje.append(" para todo historial");
+        }
+        mensaje.append("!");
+        partido.getObserver().SerNotificado(notificados, new Notificacion("Partido relacionado a tu historial creado", mensaje.toString()));
+        if (partido.getEstado().getClass().equals(NecesitaJugadores.class) && partido.getParticipaciones().size()>=partido.getCantidadJugadores()) {
+            partido.CambiarEstado();
+        }
     }
 
     // privates

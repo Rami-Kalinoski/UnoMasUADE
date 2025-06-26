@@ -19,7 +19,8 @@ CREATE TABLE usuario (
     username VARCHAR(255) NOT NULL,
     email VARCHAR(255) NOT NULL UNIQUE,
     contraseña VARCHAR(255) NOT NULL,
-    ubicacion VARCHAR(255)
+    ubicacion VARCHAR(255),
+    notificaciones VARCHAR(10) CHECK (notificaciones IN ('PUSH', 'EMAIL'))
 );
 
 -- Crear tabla partido (sin observer)

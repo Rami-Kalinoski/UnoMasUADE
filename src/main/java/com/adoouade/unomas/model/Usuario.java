@@ -3,6 +3,7 @@ package com.adoouade.unomas.model;
 import com.adoouade.unomas.dao.ParticipacionDao;
 import com.adoouade.unomas.dao.UsuarioDao;
 import com.adoouade.unomas.dao.UsuarioDeporteDao;
+import com.adoouade.unomas.enums.Notificaciones;
 import lombok.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -17,6 +18,7 @@ public class Usuario {
     private String contraseña;
     private String ubicacion;
     private List<UsuarioDeporte> usuarioDeportes;
+    private Notificaciones notificaciones;
 
     @Autowired
     private UsuarioDao usuarioDao;

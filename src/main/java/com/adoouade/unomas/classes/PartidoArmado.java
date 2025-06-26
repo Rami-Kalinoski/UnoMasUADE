@@ -1,5 +1,8 @@
 package com.adoouade.unomas.classes;
 
+import com.adoouade.unomas.controller.PartidoController;
+import com.adoouade.unomas.dao.PartidoDao;
+import com.adoouade.unomas.dto.PartidoDto;
 import com.adoouade.unomas.interfaces.IEstadoPartido;
 import com.adoouade.unomas.model.Partido;
 import com.adoouade.unomas.model.Usuario;
@@ -11,6 +14,10 @@ public class PartidoArmado implements IEstadoPartido {
     public void ManejarPartido(Partido partido) {
         if (partido.DeterminarConfirmaciones()) {
             partido.setEstado(new Confirmado());
+            PartidoController controller = new PartidoController();
+            PartidoDao dao = new PartidoDao();
+            PartidoDto dto = dao.toDto(partido);
+            controller.ModificarPartido(dto);
             List<Usuario> notificados = new ArrayList<>();
             partido.getParticipaciones().forEach(participacion -> {
                 notificados.add(participacion.getUsuario());
@@ -22,6 +29,10 @@ public class PartidoArmado implements IEstadoPartido {
     }
     public void CancelarPartido(Partido partido) {
         partido.setEstado(new Cancelado());
+        PartidoController controller = new PartidoController();
+        PartidoDao dao = new PartidoDao();
+        PartidoDto dto = dao.toDto(partido);
+        controller.ModificarPartido(dto);
         List<Usuario> notificados = new ArrayList<>();
         partido.getParticipaciones().forEach(participacion -> {
             notificados.add(participacion.getUsuario());

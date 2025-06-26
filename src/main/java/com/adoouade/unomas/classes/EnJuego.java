@@ -1,5 +1,8 @@
 package com.adoouade.unomas.classes;
 
+import com.adoouade.unomas.controller.PartidoController;
+import com.adoouade.unomas.dao.PartidoDao;
+import com.adoouade.unomas.dto.PartidoDto;
 import com.adoouade.unomas.enums.EstadoParticipacion;
 import com.adoouade.unomas.enums.Resultado;
 import com.adoouade.unomas.interfaces.IEstadoPartido;
@@ -21,6 +24,10 @@ public class EnJuego implements IEstadoPartido {
         LocalDateTime fin = comienzo.plusMinutes(partido.getDuracionMinutos());
         if (LocalDateTime.now().isAfter(fin)) {
             partido.setEstado(new Finalizado());
+            PartidoController controller = new PartidoController();
+            PartidoDao dao = new PartidoDao();
+            PartidoDto dto = dao.toDto(partido);
+            controller.ModificarPartido(dto);
             List<Usuario> notificados = new ArrayList<>();
             partido.getParticipaciones().forEach(participacion -> {
                 notificados.add(participacion.getUsuario());
