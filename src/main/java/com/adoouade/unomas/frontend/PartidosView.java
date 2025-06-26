@@ -1,12 +1,15 @@
 package com.adoouade.unomas.frontend;
 
+import com.adoouade.unomas.controller.DeporteController;
+import com.adoouade.unomas.controller.PartidoController;
+import com.adoouade.unomas.controller.UsuarioController;
 import com.adoouade.unomas.model.Usuario;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class PartidosView {
-    public PartidosView(CardLayout card, JPanel panelCard, Usuario usuario) {
+    public void CrearPantalla(CardLayout card, JPanel panelCard, JFrame parent, UsuarioController usuarioController, PartidoController partidoController, Usuario usuario, DeporteController deporteController) {
         JPanel partidos = new JPanel();
         partidos.setLayout(new BorderLayout());
 
@@ -17,9 +20,23 @@ public class PartidosView {
         // Sección CENTER
         JPanel buttons = new JPanel();
         buttons.setLayout(new BoxLayout(buttons, BoxLayout.Y_AXIS));
-        JButton verPerfilBtn = new JButton("Visor de partidos"); buttons.add(verPerfilBtn);
-        JButton historialBtn = new JButton("Buscar partidos"); buttons.add(historialBtn);
-        JButton partidosBtn = new JButton("Crear partido"); buttons.add(partidosBtn);
+        JButton visorDePartidosBtn = new JButton("Visor de partidos");
+        JButton buscarPartidosBtn = new JButton("Buscar partidos");
+        JButton crearPartidoBtn = new JButton("Crear partido");
+
+        visorDePartidosBtn.addActionListener(e ->  {
+            card.show(panelCard, "Visor de Partidos");
+        });
+        buscarPartidosBtn.addActionListener(e ->  {
+            BuscarPartidosView buscarPartidosView = new BuscarPartidosView(); buscarPartidosView.CrearPantalla(card, panelCard, parent, usuarioController, partidoController, usuario, deporteController);
+            card.show(panelCard, "Buscar Partidos");
+        });
+        crearPartidoBtn.addActionListener(e ->  {
+            card.show(panelCard, "Crear Partido");
+        });
+
+
+        buttons.add(visorDePartidosBtn); buttons.add(buscarPartidosBtn); buttons.add(crearPartidoBtn);
         partidos.add(buttons, BorderLayout.CENTER);
 
         // Agregar al card

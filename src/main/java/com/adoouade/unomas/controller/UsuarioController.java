@@ -33,6 +33,9 @@ public class UsuarioController {
     public Usuario CrearUsuario(UsuarioDto usuarioDto) {
         return usuarioDao.crearUsuario(usuarioDto);
     }
+    public Usuario ObtenerUsuario(String username) {
+        return usuarioDao.obtenerUsuario(username);
+    }
     public Usuario ObtenerUsuario(Long id) {
         return usuarioDao.obtenerUsuario(id);
     }

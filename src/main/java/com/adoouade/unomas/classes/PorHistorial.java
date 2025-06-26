@@ -26,6 +26,14 @@ public class PorHistorial implements IEstrategiaEmparejamiento {
     private Integer minimosPerdidos = null;
     private Integer maximosPerdidos = null;
 
+    // constructor
+    public PorHistorial(Integer minimosGanados, Integer maximosGanados, Integer minimosPerdidos, Integer maximosPerdidos) {
+        this.minimosGanados = minimosGanados;
+        this.maximosGanados = maximosGanados;
+        this.minimosPerdidos = minimosPerdidos;
+        this.maximosPerdidos = maximosPerdidos;
+    }
+
     // methods
     public void Emparejar(Partido partido) {
         List<Usuario> usuarios = controller.ObtenerUsuarios();
@@ -67,6 +75,21 @@ public class PorHistorial implements IEstrategiaEmparejamiento {
         if (partido.getEstado().getClass().equals(NecesitaJugadores.class) && partido.getParticipaciones().size()>=partido.getCantidadJugadores()) {
             partido.CambiarEstado();
         }
+    }
+
+    public boolean Cumple(UsuarioDeporte usuarioDeporte) {
+        if (usuarioDeporte == null) return false;
+
+        int ganados = usuarioDeporte.getPartidosGanados();
+        int perdidos = usuarioDeporte.getPartidosPerdidos();
+
+        boolean cumpleGanados = (minimosGanados == null || ganados >= minimosGanados) &&
+                (maximosGanados == null || ganados <= maximosGanados);
+
+        boolean cumplePerdidos = (minimosPerdidos == null || perdidos >= minimosPerdidos) &&
+                (maximosPerdidos == null || perdidos <= maximosPerdidos);
+
+        return cumpleGanados && cumplePerdidos;
     }
 
     // privates

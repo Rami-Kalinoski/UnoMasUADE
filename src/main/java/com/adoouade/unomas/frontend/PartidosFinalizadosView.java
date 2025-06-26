@@ -1,5 +1,6 @@
 package com.adoouade.unomas.frontend;
 
+import com.adoouade.unomas.controller.DeporteController;
 import com.adoouade.unomas.controller.PartidoController;
 import com.adoouade.unomas.controller.UsuarioController;
 import com.adoouade.unomas.enums.EstadoParticipacion;
@@ -13,10 +14,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class PartidosFinalizadosView {
-    public PartidosFinalizadosView(CardLayout card, JPanel panelCard, Usuario usuario, PartidoController partidoController, UsuarioController usuarioController) {
+    public void CrearPantalla(CardLayout card, JPanel panelCard, JFrame parent, UsuarioController usuarioController, PartidoController partidoController, Usuario usuario, DeporteController deporteController) {
         JPanel finalizados = new JPanel();
         finalizados.setLayout(new BorderLayout());
-
         List<Partido> partidosPendientes = partidoController.ObtenerPartidos().stream()
                 .filter(p -> p.getParticipaciones().stream()
                         .anyMatch(part ->
@@ -27,8 +27,14 @@ public class PartidosFinalizadosView {
                 .collect(Collectors.toList());;
 
         // Sección NORTH
+        JPanel topPanel = new JPanel(); topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.X_AXIS));
         JLabel title = new JLabel("Partidos Finalizados");
-        finalizados.add(title, BorderLayout.NORTH);
+        JButton volverBtn = new JButton("Volver");
+        volverBtn.addActionListener(e -> {
+            card.show(panelCard, "Visor de Partidos");
+        });
+        topPanel.add(title); topPanel.add(volverBtn);
+        finalizados.add(topPanel, BorderLayout.NORTH);
 
         // Sección CENTER
         JPanel infoPanel = new JPanel(); infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.Y_AXIS));
@@ -42,11 +48,19 @@ public class PartidosFinalizadosView {
             JLabel resultadoLabel = new JLabel(participacion.getResultado().toString());
             JButton verReseñasBtn = new JButton("VER RESEÑAS");
             JButton dejarReseñaBtn = new JButton("DEJAR RESEÑA");
+
+            verReseñasBtn.addActionListener(e -> {
+                VerReseñasDialog dialogo = new VerReseñasDialog(parent, usuarioController, partidoController, partido);
+            });
+            dejarReseñaBtn.addActionListener(e -> {
+                DejarReseñaDialog dialogo = new DejarReseñaDialog(parent, usuarioController, partidoController, partido);
+            });
+
             buttons.add(resultadoLabel); buttons.add(verReseñasBtn); buttons.add(dejarReseñaBtn);
         });
 
 
         // Agregar al card
-        panelCard.add(finalizados, "Partidos Pendientes");
+        panelCard.add(finalizados, "Partidos Finalizados");
     }
 }

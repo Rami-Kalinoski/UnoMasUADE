@@ -22,6 +22,12 @@ public class PorNivel implements IEstrategiaEmparejamiento {
     private Nivel nivelMinimo = null;
     private Nivel nivelMaximo = null;
 
+    // constructor
+    public PorNivel(Nivel nivelMinimo, Nivel nivelMaximo) {
+        this.nivelMinimo = nivelMinimo;
+        this.nivelMaximo = nivelMaximo;
+    }
+
     // methods
     public void Emparejar(Partido partido) {
         List<Usuario> usuarios = controller.ObtenerUsuarios();
@@ -55,6 +61,17 @@ public class PorNivel implements IEstrategiaEmparejamiento {
             partido.CambiarEstado();
         }
     }
+
+    public boolean Cumple(UsuarioDeporte usuarioDeporte) {
+        if (usuarioDeporte == null || usuarioDeporte.getNivel() == null) {
+            return false;
+        }
+
+        Nivel nivelUsuario = usuarioDeporte.getNivel();
+
+        return nivelUsuario.compareTo(nivelMinimo) >= 0 && nivelUsuario.compareTo(nivelMaximo) <= 0;
+    }
+
     @Override
     public String toString() {
         return "PorNivel";

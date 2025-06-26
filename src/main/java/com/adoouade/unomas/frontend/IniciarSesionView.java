@@ -1,10 +1,16 @@
 package com.adoouade.unomas.frontend;
 
+import com.adoouade.unomas.UnomasApplication;
+import com.adoouade.unomas.controller.DeporteController;
+import com.adoouade.unomas.controller.PartidoController;
+import com.adoouade.unomas.controller.UsuarioController;
+import com.adoouade.unomas.model.Usuario;
+
 import javax.swing.*;
 import java.awt.*;
 
 public class IniciarSesionView {
-    public IniciarSesionView(CardLayout card, JPanel panelCard) {
+    public void CrearPantalla(CardLayout card, JPanel panelCard, JFrame parent, UsuarioController usuarioController, PartidoController partidoController, Usuario usuario, DeporteController deporteController) {
         JPanel iniciarSesion = new JPanel();
         iniciarSesion.setLayout(new BorderLayout());
 
@@ -30,6 +36,33 @@ public class IniciarSesionView {
         JPanel buttonsPanel = new JPanel();
         JButton iniciarSesionBtn = new JButton("INICIAR SESIÓN");
         JButton irRegistrarseBtn = new JButton("¿No tenes cuenta? Registrate");
+
+        iniciarSesionBtn.addActionListener(e -> {
+            String username = usernameField.getText();
+            String email = emailField.getText();
+            String contraseña = passwordField.getText();
+
+            try {
+                boolean entra = usuarioController.Login(username, email, contraseña);
+                if (entra) {
+                    Usuario usuarioAux = usuarioController.ObtenerUsuario(username);
+                    usuarioController.setUsuario(usuarioAux);
+                    JOptionPane.showMessageDialog(null, "¡Inicio de sesión exitoso!", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+                    InicioView inicioView = new InicioView();
+                    inicioView.CrearPantalla(card, panelCard, parent, usuarioController, partidoController, usuarioAux, deporteController);
+                    card.show(panelCard, "Inicio");
+                } else {
+                    JOptionPane.showMessageDialog(null, "Usuario o contraseña incorrectos.", "Error de autenticación", JOptionPane.ERROR_MESSAGE);
+                }
+            } catch (Exception exception) {
+                JOptionPane.showMessageDialog(null, "Ocurrió un error en el servidor. Intente nuevamente más tarde.", "Error del servidor", JOptionPane.WARNING_MESSAGE);
+            }
+        });
+
+        irRegistrarseBtn.addActionListener(e -> {
+            card.show(panelCard, "Registrarse");
+        });
+
         buttonsPanel.add(iniciarSesionBtn); buttonsPanel.add(irRegistrarseBtn);
         iniciarSesion.add(buttonsPanel, BorderLayout.SOUTH);
 

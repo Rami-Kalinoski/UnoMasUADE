@@ -19,11 +19,4 @@ public class Usuario {
     private String ubicacion;
     private List<UsuarioDeporte> usuarioDeportes;
     private Notificaciones notificaciones;
-
-    @Autowired
-    private UsuarioDao usuarioDao;
-    @Autowired
-    private UsuarioDeporteDao usuarioDeporteDao;
-    @Autowired
-    private ParticipacionDao participacionDao;
 }

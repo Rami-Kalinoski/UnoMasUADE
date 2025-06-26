@@ -37,9 +37,6 @@ public class UsuarioDao {
                 .filter(ud -> ud.getUsuario() != null && ud.getUsuario().getId().equals(id))
                 .collect(Collectors.toList());;
         usuario.setUsuarioDeportes(usuarioDeportes);
-        //usuario.setUsuarioDao(self);
-        //usuario.setUsuarioDeporteDao(usuarioDeporteDao);
-        usuario.setParticipacionDao(participacionDao);
         return usuario;
     }
 
@@ -85,10 +82,7 @@ public class UsuarioDao {
                             dto.getContraseña(),
                             dto.getUbicacion(),
                             null,
-                            Notificaciones.valueOf(dto.getNotificaciones()),
-                            null,
-                            null,
-                            null
+                            Notificaciones.valueOf(dto.getNotificaciones())
                     );
                 }
             }
@@ -116,10 +110,34 @@ public class UsuarioDao {
                         rs.getString("contraseña"),
                         rs.getString("ubicacion"),
                         null,
-                        Notificaciones.valueOf(rs.getString("notificaciones")),
+                        Notificaciones.valueOf(rs.getString("notificaciones"))
+                );
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+    public Usuario obtenerUsuario(String username) {
+        String sql = "SELECT * FROM usuario WHERE username = ?";
+
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, username);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                return new Usuario(
+                        rs.getLong("id"),
+                        rs.getString("username"),
+                        rs.getString("email"),
+                        rs.getString("contraseña"),
+                        rs.getString("ubicacion"),
                         null,
-                        null,
-                        null
+                        Notificaciones.valueOf(rs.getString("notificaciones"))
                 );
             }
 
@@ -145,10 +163,7 @@ public class UsuarioDao {
                         rs.getString("contraseña"),
                         rs.getString("ubicacion"),
                         null,
-                        Notificaciones.valueOf(rs.getString("notificaciones")),
-                        null,
-                        null,
-                        null
+                        Notificaciones.valueOf(rs.getString("notificaciones"))
                 ));
             }
 

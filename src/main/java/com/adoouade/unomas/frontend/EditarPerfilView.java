@@ -1,12 +1,16 @@
 package com.adoouade.unomas.frontend;
 
+import com.adoouade.unomas.controller.DeporteController;
+import com.adoouade.unomas.controller.PartidoController;
+import com.adoouade.unomas.controller.UsuarioController;
+import com.adoouade.unomas.dto.UsuarioDto;
 import com.adoouade.unomas.model.Usuario;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class EditarPerfilView {
-    public EditarPerfilView(CardLayout card, JPanel panelCard, Usuario usuario) {
+    public void CrearPantalla(CardLayout card, JPanel panelCard, JFrame parent, UsuarioController usuarioController, PartidoController partidoController, Usuario usuario, DeporteController deporteController) {
         JPanel editarPerfil = new JPanel();
         editarPerfil.setLayout(new BorderLayout());
 
@@ -46,6 +50,33 @@ public class EditarPerfilView {
         JPanel buttonsPanel = new JPanel(); buttonsPanel.setLayout(new BoxLayout(buttonsPanel, BoxLayout.X_AXIS));
         JButton guardarBtn = new JButton("GUARDAR");
         JButton cancelarBtn = new JButton("CANCELAR");
+
+        guardarBtn.addActionListener(e -> {
+            String username = usernameField.getText();
+            String email = emailField.getText();
+            String contraseña = passwordField.getText();
+            String ubicacion = ubicacionField.getText();
+            String notificacion = (String) comboBox.getSelectedItem();
+
+            try {
+                boolean modificado = usuarioController.ModificarUsuario(new UsuarioDto(usuario.getId(), username, email, contraseña, ubicacion, notificacion));
+                if (modificado) {
+                    JOptionPane.showMessageDialog(null, "¡Modificación exitosa!", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+                    card.show(panelCard, "Perfil");
+                } else {
+                    JOptionPane.showMessageDialog(null, "Ocurrió un error en el servidor. Intente nuevamente más tarde.", "Error del servidor", JOptionPane.WARNING_MESSAGE);
+                }
+            } catch (Exception exception) {
+                JOptionPane.showMessageDialog(null, "Ocurrió un error en el servidor. Intente nuevamente más tarde.", "Error del servidor", JOptionPane.WARNING_MESSAGE);
+            }
+
+        });
+
+        cancelarBtn.addActionListener(e -> {
+            card.show(panelCard, "Perfil");
+        });
+
+
         buttonsPanel.add(guardarBtn); buttonsPanel.add(cancelarBtn);
         editarPerfil.add(buttonsPanel, BorderLayout.SOUTH);
 

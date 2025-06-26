@@ -23,6 +23,11 @@ public class PorCercania implements IEstrategiaEmparejamiento {
     private UsuarioController controller;
     private String ubicacion;
 
+    // constructor
+    public PorCercania(String ubicacion) {
+        this.ubicacion = ubicacion;
+    }
+
     // methods
     public void Emparejar(Partido partido) {
         List<Usuario> usuarios = controller.ObtenerUsuarios();
@@ -41,6 +46,11 @@ public class PorCercania implements IEstrategiaEmparejamiento {
             partido.CambiarEstado();
         }
     }
+
+    public boolean Cumple(UsuarioDeporte usuarioDeporte) {
+        return true;
+    }
+
     @Override
     public String toString() {
         return "PorCercania";

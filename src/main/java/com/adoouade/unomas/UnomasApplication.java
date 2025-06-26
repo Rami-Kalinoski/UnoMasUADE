@@ -1,7 +1,9 @@
 package com.adoouade.unomas;
 
+import com.adoouade.unomas.controller.DeporteController;
 import com.adoouade.unomas.controller.PartidoController;
 import com.adoouade.unomas.controller.UsuarioController;
+import com.adoouade.unomas.dao.DeporteDao;
 import com.adoouade.unomas.frontend.*;
 import com.adoouade.unomas.model.Usuario;
 import org.springframework.boot.SpringApplication;
@@ -10,6 +12,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ComponentAdapter;
 
 @SpringBootApplication
 public class UnomasApplication {
@@ -35,6 +38,7 @@ public class UnomasApplication {
 		ConfigurableApplicationContext context = SpringApplication.run(UnomasApplication.class, args);
 		UsuarioController usuarioController = context.getBean(UsuarioController.class);
 		PartidoController partidoController = context.getBean(PartidoController.class);
+		DeporteController deporteController = context.getBean(DeporteController.class);
 
 		// crear ventana principal
 		JFrame frame = new JFrame("UnoMas");
@@ -44,29 +48,48 @@ public class UnomasApplication {
 		CardLayout card = new CardLayout();
 		JPanel panelCard = new JPanel(card);
 
-		Usuario usuario = new Usuario();
+		Usuario usuario = usuarioController.getUsuario();
 
 		// crear pantallas e inicializar atributos
-		iniciarSesionView = new IniciarSesionView(card, panelCard);
-		registrarseView = new RegistrarseView(card, panelCard);
-		inicioView = new InicioView(card, panelCard, usuario);
-		perfilView = new PerfilView(card, panelCard, usuario);
-		editarPerfilView = new EditarPerfilView(card, panelCard, usuario);
-		historialView = new HistorialView(card, panelCard, usuario);
-		partidosView = new PartidosView(card, panelCard, usuario);
-		buscarPartidosView = new BuscarPartidosView(card, panelCard, usuario);
-		crearPartidoView = new CrearPartidoView(card, panelCard, usuario);
-		visorPartidosView = new VisorPartidosView(card, panelCard, usuario);
-		partidosPendientesView = new PartidosPendientesView(card, panelCard, usuario, partidoController);
-		partidosSinArmarseView = new PartidosSinArmarseView(card, panelCard, usuario, partidoController);
-		partidosPorJugarseView = new PartidosPorJugarseView(card, panelCard, usuario, partidoController);
-		partidosEnJuegoView = new PartidosEnJuegoView(card, panelCard, usuario, partidoController);
-		partidosFinalizadosView = new PartidosFinalizadosView(card, panelCard, usuario, partidoController, usuarioController);
+		iniciarSesionView = new IniciarSesionView();
+		registrarseView = new RegistrarseView();
+		inicioView = new InicioView();
+
+		partidosView = new PartidosView();
+		buscarPartidosView = new BuscarPartidosView();
+		crearPartidoView = new CrearPartidoView();
+		visorPartidosView = new VisorPartidosView();
+		partidosPendientesView = new PartidosPendientesView();
+		partidosSinArmarseView = new PartidosSinArmarseView();
+		partidosPorJugarseView = new PartidosPorJugarseView();
+		partidosEnJuegoView = new PartidosEnJuegoView();
+		partidosFinalizadosView = new PartidosFinalizadosView();
+
+		iniciarSesionView.CrearPantalla(card, panelCard, frame, usuarioController, partidoController, usuario, deporteController);
+		registrarseView.CrearPantalla(card, panelCard, frame, usuarioController, partidoController, usuario, deporteController);
+		partidosView.CrearPantalla(card, panelCard, frame, usuarioController, partidoController, usuario, deporteController);
+		crearPartidoView.CrearPantalla(card, panelCard, frame, usuarioController, partidoController, usuario, deporteController);
+		visorPartidosView.CrearPantalla(card, panelCard, frame, usuarioController, partidoController, usuario, deporteController);
+		partidosSinArmarseView.CrearPantalla(card, panelCard, frame, usuarioController, partidoController, usuario, deporteController);
+		partidosPorJugarseView.CrearPantalla(card, panelCard, frame, usuarioController, partidoController, usuario, deporteController);
+		partidosEnJuegoView.CrearPantalla(card, panelCard, frame, usuarioController, partidoController, usuario, deporteController);
+
+
 
 		// agregar panelCard al frame
 		frame.setLayout(new BorderLayout());
 		frame.add(panelCard, BorderLayout.CENTER);
 		card.show(panelCard, "Iniciar Sesion");
 		frame.setVisible(true);
+	}
+
+	public static void crearPantallasPersonalizadas(CardLayout card, JPanel panelCard, JFrame frame, UsuarioController usuarioController, PartidoController partidoController, Usuario usuario, DeporteController deporteController) {
+		inicioView.CrearPantalla(card, panelCard, frame, usuarioController, partidoController, usuario, deporteController);
+		perfilView.CrearPantalla(card, panelCard, frame, usuarioController, partidoController, usuario, deporteController);
+		editarPerfilView.CrearPantalla(card, panelCard, frame, usuarioController, partidoController, usuario, deporteController);
+		historialView.CrearPantalla(card, panelCard, frame, usuarioController, partidoController, usuario, deporteController);
+		buscarPartidosView.CrearPantalla(card, panelCard, frame, usuarioController, partidoController, usuario, deporteController);
+		partidosPendientesView.CrearPantalla(card, panelCard, frame, usuarioController, partidoController, usuario, deporteController);
+		partidosFinalizadosView.CrearPantalla(card, panelCard, frame, usuarioController, partidoController, usuario, deporteController);
 	}
 }
