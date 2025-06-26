@@ -115,25 +115,62 @@ public class PartidoDao {
             if (filas > 0) {
                 ResultSet rs = stmt.getGeneratedKeys();
                 if (rs.next()) {
-//                    Partido partido = new Partido();
-//                    partido.setId(rs.getLong(1));
-//
-//                    Usuario organizador = new Usuario();
-//                    organizador.setId(dto.getOrganizadorId());
-//                    partido.setOrganizador(organizador);
-//
-//                    Deporte deporte = new Deporte();
-//                    deporte.setId(dto.getDeporteId());
-//                    partido.setDeporte(deporte);
-//
-//                    partido.setUbicacion(dto.getUbicacion());
-//                    partido.setFecha(dto.getFecha());
-//                    partido.setHorario(dto.getHorario());
-//
-//                    partido.setCantidadJugadores(dto.getCantidadJugadores());
-//                    partido.setDuracionMinutos(dto.getDuracionMinutos());
+                    Partido partido = new Partido();
+                    Long partidoId = rs.getLong(1);
+                    partido.setId(partidoId);
 
-                    Partido partido = toModel(dto);
+                    Usuario organizador = new Usuario();
+                    organizador.setId(dto.getOrganizadorId());
+                    partido.setOrganizador(organizador);
+
+                    Deporte deporte = new Deporte();
+                    deporte.setId(dto.getDeporteId());
+                    partido.setDeporte(deporte);
+
+                    partido.setUbicacion(dto.getUbicacion());
+                    partido.setFecha(dto.getFecha());
+                    partido.setHorario(dto.getHorario());
+
+                    String estadoStr = dto.getEstado();
+                    String emparejadorStr = dto.getEmparejador();
+
+                    IEstadoPartido estado = null;
+                    if (estadoStr=="NECESITA_JUGADORES") {
+                        estado = new NecesitaJugadores();
+                    } else if (estadoStr=="PARTIDO_ARMADO") {
+                        estado = new PartidoArmado();
+                    } else if (estadoStr=="CONFIRMADO") {
+                        estado = new Confirmado();
+                    } else if (estadoStr=="EN_JUEGO") {
+                        estado = new EnJuego();
+                    } else if (estadoStr=="FINALIZADO") {
+                        estado = new Finalizado();
+                    } else {
+                        estado = new Cancelado();
+                    }
+                    partido.setEstado(estado);
+                    List<Participacion> participaciones = participacionDao.obtenerParticipaciones().stream()
+                            .filter(p -> p.getPartido() != null && p.getPartido().getId().equals(partidoId))
+                            .collect(Collectors.toList());
+                    partido.setParticipaciones(participaciones);
+                    List<Reseña> reseñas = reseñaDao.obtenerReseñas().stream()
+                            .filter(p -> p.getPartido() != null && p.getPartido().getId().equals(partidoId))
+                            .collect(Collectors.toList());
+                    partido.setReseñas(reseñas);
+
+                    Emparejador emparejador = new Emparejador();
+                    if (emparejadorStr=="PorCercania") {
+                        emparejador.CambiarEstrategia(new PorCercania());
+                    } else if (emparejadorStr=="PorNivel") {
+                        emparejador.CambiarEstrategia(new PorNivel());
+                    } else {
+                        emparejador.CambiarEstrategia(new PorHistorial());
+                    }
+                    partido.setEmparejador(emparejador);
+
+
+                    partido.setCantidadJugadores(dto.getCantidadJugadores());
+                    partido.setDuracionMinutos(dto.getDuracionMinutos());
 
                     return partido;
                 }
@@ -309,7 +346,7 @@ public class PartidoDao {
             stmt.setDate(4, java.sql.Date.valueOf(dto.getFecha()));
             stmt.setTime(5, java.sql.Time.valueOf(dto.getHorario()));
             stmt.setString(6, dto.getEstado());
-            stmt.setString(6, dto.getEmparejador());
+            stmt.setString(7, dto.getEmparejador());
             stmt.setInt(8, dto.getCantidadJugadores());
             stmt.setInt(9, dto.getDuracionMinutos());
             stmt.setLong(10, dto.getId()); // el id a modificar

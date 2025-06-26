@@ -28,4 +28,8 @@ public class PartidoArmado implements IEstadoPartido {
         });
         partido.getObserver().SerNotificado(notificados, new Notificacion("Partido Cancelado", "El organizador ha cancelado este partido."));
     }
+    @Override
+    public String toString() {
+        return "PartidoArmado";
+    }
 }

@@ -10,11 +10,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ReseñaDto {
     private Long id;
+    private Long usuarioId;
     private Long partidoId;
     private String comentario;
     private int calificacion;
 
-    public ReseñaDto(Long partidoId, String comentario, int calificacion) {
+    public ReseñaDto(Long usuarioId, Long partidoId, String comentario, int calificacion) {
+        this.usuarioId = usuarioId;
         this.partidoId = partidoId;
         this.comentario = comentario;
         this.calificacion = calificacion;

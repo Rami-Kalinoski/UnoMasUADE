@@ -26,8 +26,8 @@ public class UsuarioDao {
     private UsuarioDeporteDao usuarioDeporteDao;
     @Autowired
     private ParticipacionDao participacionDao;
-    @Autowired
-    private UsuarioDao self;
+    //@Autowired
+    //private UsuarioDao self;
 
     // pass
     public Usuario toModel(Long id) {

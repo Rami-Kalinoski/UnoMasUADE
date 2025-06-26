@@ -41,4 +41,8 @@ public class PorCercania implements IEstrategiaEmparejamiento {
 //            partido.CambiarEstado();
 //        }
     }
+    @Override
+    public String toString() {
+        return "PorCercania";
+    }
 }

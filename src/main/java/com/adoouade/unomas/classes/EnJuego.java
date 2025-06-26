@@ -59,6 +59,10 @@ public class EnJuego implements IEstadoPartido {
             });
         }
     }
+    @Override
+    public String toString() {
+        return "EnJuego";
+    }
     private void TomarReseñas(Partido partido) {
 //        Scanner scanner = new Scanner(System.in);
 //        String comentario = "";
@@ -77,4 +81,5 @@ public class EnJuego implements IEstadoPartido {
     private int RandomInt(int min, int max) {
         return ThreadLocalRandom.current().nextInt(min, max + 1);
     }
+
 }

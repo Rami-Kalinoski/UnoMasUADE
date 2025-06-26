@@ -53,4 +53,8 @@ public class PorNivel implements IEstrategiaEmparejamiento {
 //            partido.CambiarEstado();
 //        }
     }
+    @Override
+    public String toString() {
+        return "PorNivel";
+    }
 }

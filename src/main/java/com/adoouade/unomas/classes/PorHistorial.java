@@ -79,4 +79,8 @@ public class PorHistorial implements IEstrategiaEmparejamiento {
             return tipo + " sin restricción";
         }
     }
+    @Override
+    public String toString() {
+        return "PorHistorial";
+    }
 }

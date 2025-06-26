@@ -66,9 +66,11 @@ CREATE TABLE participacion (
 -- Crear tabla reseña
 CREATE TABLE reseña (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    usuario_id BIGINT NOT NULL,
     partido_id BIGINT NOT NULL,
     comentario TEXT,
     calificacion INT,
+    FOREIGN KEY (usuario_id) REFERENCES usuario(id),
     FOREIGN KEY (partido_id) REFERENCES partido(id)
 );
 

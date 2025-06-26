@@ -10,4 +10,8 @@ public class Finalizado implements IEstadoPartido {
     public void CancelarPartido(Partido partido) {
         System.out.println("El partido ya ha finalizado.");
     }
+    @Override
+    public String toString() {
+        return "Finalizado";
+    }
 }

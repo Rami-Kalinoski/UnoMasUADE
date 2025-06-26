@@ -10,4 +10,8 @@ public class Cancelado implements IEstadoPartido {
     public void CancelarPartido(Partido partido) {
         System.out.println("El partido ya se ha cancelado.");
     }
+    @Override
+    public String toString() {
+        return "Cancelado";
+    }
 }
